@@ -17,7 +17,6 @@ def main():
     
     for case in testcases:
         run_test(case[0], case[1], case[2], case[3], case[4])
-        #print(case)
-        #run_test(case)
+    #ToDo: Write test cases for LeafNode!
 
 main()
