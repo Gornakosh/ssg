@@ -17,10 +17,10 @@ class HTMLNode:
         return output
                 
     def __repr__(self):
-        print(self.tag, self.value, self.children, self.props)
+        return f"Main(tag={self.tag!r}, value={self.value!r}, children={self.children!r}, props={self.props!r})"
     
 class LeafNode(HTMLNode):
-    def __init__(self, tag, value, children, props):
+    def __init__(self, tag, value, children=None, props=None):
         super().__init__(tag, value, children, props)
         self.children = None
         if self.value == None:
@@ -34,7 +34,7 @@ class LeafNode(HTMLNode):
         if self.tag == None or self.tag == "":
             return self.value
         
-        outputstring = f"<{self.tag} "
+        outputstring = f"<{self.tag}>"
         if self.props != None:
             for attr, value in self.props.items():
                 outputstring += f' {attr}="{value}"'
@@ -43,10 +43,40 @@ class LeafNode(HTMLNode):
             outputstring += f">"
             return outputstring
         else:
-            outputstring += f" {self.value}</{self.tag}>"
+            outputstring += f"{self.value}</{self.tag}>"
         
         return outputstring
+    
+class ParentNode(HTMLNode):
+    def __init__(self, tag, value, children, props):
+        super().__init__(tag, value, children, props)
+        self.value = None
+
+    def  to_html(self):
         
+        if self.tag == None or self.tag == "":
+            raise ValueError("ParentNode needs a tag")
+        
+        if self.children == None or self.children == "":
+            raise ValueError("Parent node needs children!")
+        childrenlist = self.children.copy()
+        #may work...
+        def html_string(childrenlist):
+            tagind = len(self.tag) + 2
+            if len(childrenlist) == 0:
+                htmlstring = f"<{self.tag}></{self.tag}>"
+                return htmlstring
+            else:
+                htmlstring = html_string(childrenlist[1:])
+                #construct the children string: 
+                htmlstring = htmlstring[:tagind] + childrenlist[0].to_html() + htmlstring[tagind:]
+            return htmlstring
+        
+        return html_string(childrenlist)
+        
+
+
+
 
         
         
