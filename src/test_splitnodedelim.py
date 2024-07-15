@@ -1,4 +1,4 @@
-from split_nodes_delimiter import *
+from split_nodes import *
 
 
 
